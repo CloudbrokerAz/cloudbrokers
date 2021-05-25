@@ -1,2 +1,2 @@
 # cloudbrokers
-cloudbrokers.blog
+https://cloudbrokers.blog
