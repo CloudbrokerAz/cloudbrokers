@@ -4,3 +4,4 @@ terraform.tfstate
 terraform.tfstate.backup
 vra8/terraform.tfvars
 rest/vra8token.http
+rest/vmrc.http
