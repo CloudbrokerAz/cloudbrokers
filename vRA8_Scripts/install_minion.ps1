@@ -27,13 +27,9 @@ function Handler($context, $inputs) {
         $script = "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser; Invoke-WebRequest https://repo.saltstack.com/windows/Salt-Minion-Latest-Py3-AMD64-Setup.exe -UseBasicParsing -OutFile ~\Downloads\minion.exe"
         $script2 = "~\Downloads\minion.exe /S /master=$vrss /minion-name=$hostname"
         Start-Sleep -s 30
-        <#Write-Host $tmpl_user
-        Write-Host $tmpl_pass#>
         $runscript = Invoke-VMScript -VM $vm -ScriptText $script -GuestUser $tmpl_user -GuestPassword $tmpl_pass -ToolsWaitSecs 360
-        <#Write-Host $runscript.ScriptOutput#>
         $runscript2 = Invoke-VMScript -VM $vm -ScriptText $script2 -GuestUser $tmpl_user -GuestPassword $tmpl_pass -ToolsWaitSecs 360
-        <#Write-Host $runscript2.ScriptOutput#>
-        Write-Host "Minion installed on Windows using EXE"
+        Write-Host "Minion installed on Windows"
     } else {
         $os_type = "Minion installed on Linux"
         $script = "echo $tmpl_pass | sudo -S curl -L https://bootstrap.saltstack.com -o install_salt.sh && echo $tmpl_pass | sudo -S hostnamectl set-hostname $hostname && echo $tmpl_pass | sudo -S chmod 777 install_salt.sh && echo $tmpl_pass | sudo -S sh install_salt.sh -A $vrss"
