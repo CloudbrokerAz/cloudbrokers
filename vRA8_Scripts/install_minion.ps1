@@ -11,6 +11,7 @@ function Handler($context, $inputs) {
     $cloudType = ConvertFrom-StringData $inputs.customProperties.cloud.replace(':','=')
     write-host "Cloud Type: "  $($cloudType.platform)
     
+    #Check VMware Tools
     Connect-VIServer $vcfqdn -User $vcuser -Password $vcpassword -Force
     write-host “Waiting for VM Tools to Start”
     do {
@@ -19,6 +20,7 @@ function Handler($context, $inputs) {
     sleep 3
     } until ( ($toolsStatus -eq ‘toolsOk’) -or ($toolsStatus -eq ‘toolsOld’)  )
     
+    #Install Minion
     Write-Host "VM OS Type is "$inputs.customProperties.osType
     if ($inputs.customProperties.osType -eq 'WINDOWS') {
         Write-Host "Installing Salt Minion on "$inputs.customProperties.osType 
