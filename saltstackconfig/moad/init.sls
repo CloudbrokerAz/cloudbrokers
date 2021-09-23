@@ -1,10 +1,10 @@
 # Orchestration state file
 
 # Retrieve Pillar data
-{% set databaseMinion = pillar.get('dbMinion', '') %}
+{% set databaseMinion = pillar.get('databaseMinion', '') %}
 {% set webMinion = pillar.get('webMinion', '') %}
 
-wait_for_minion_restart:
+wait_for_db_minion_restart:
   salt.wait_for_event:
     - name: salt/minion/*/start
     - id_list:
@@ -17,7 +17,7 @@ sql_install_state:
     - sls:
       - moad.db
     - require:
-      - wait_for_minion_restart
+      - wait_for_db_minion_restart
 
 # State 2
 web_install_state:
@@ -29,3 +29,11 @@ web_install_state:
         databaseMinion: {{ databaseMinion }}
     - require:
       - sql_install_state
+      
+wait_for_web_minion_restart:
+  salt.wait_for_event:
+    - name: salt/minion/*/start
+    - id_list:
+      - {{ webMinion }}
+    - require:
+      - web_install_state

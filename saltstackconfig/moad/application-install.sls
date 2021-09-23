@@ -14,7 +14,7 @@ install_moad:
       - mods: moad
       - pillar:
           webMinion: {{ data['data']['webMinion'] }}
-          dbMinion: {{ data['data']['databaseMinion'] }}
+          databaseMinion: {{ data['data']['databaseMinion'] }}
 
 {% elif data['tag'] == 'salt/softwareBuild/mssql2019' %}
 

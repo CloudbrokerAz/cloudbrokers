@@ -1,3 +1,5 @@
+#DO NOT MODIFY
+
 #Creating User
 ocuser:
   user.present:
@@ -11,13 +13,13 @@ ocuser:
 needed-pkgs:
   pkg.installed:
     - pkgs:
-      - mysql-server-5.7
+      - mysql-server
       - mysql-client
       - unzip
       - open-vm-tools
  
  # Final Script Configuration
-/var/www/opencart:
+create_opencart_database:
   cmd:
     - script
     - source: salt://moad/files/backend.sh
