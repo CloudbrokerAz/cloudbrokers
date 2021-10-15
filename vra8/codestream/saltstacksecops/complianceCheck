@@ -1,0 +1,76 @@
+---
+runtime: "nodejs"
+code: |
+    var context = require("./context.js")
+    const complianceResult = context.getInput("result");
+    const complianceResultJson = JSON.parse(complianceResult);
+    
+    var compliantCount = 0;
+    var nonCompliantCount = 0;
+    var notapplicableCount = 0;
+    
+    const key = Object.keys(complianceResultJson)[0];
+    const policyAssess = Object.keys(complianceResultJson[key])[2];
+    const details = (Object.keys(complianceResultJson[key][policyAssess]));
+    
+    const changes = complianceResultJson[key][policyAssess][details[1]];
+    const numberOfKeys = Object.keys(changes.ret);
+    
+    //count number of keys in changes if type is object
+    var numberOfObjects = 0;
+    for (var i = 0; i < numberOfKeys.length; i++) {
+        if (typeof changes.ret[numberOfKeys[i]] === 'object') {
+            numberOfObjects++;
+        }
+    }
+    
+    //for each key in changes count the number times the value of 'status' equals 'noncompliant', 'compliant' or 'not_applicable' and add to the respective count
+    for (var i = 0; i < numberOfKeys.length; i++) {
+        if (changes.ret[numberOfKeys[i]].status === 'compliant') {
+            compliantCount++;
+        } else if (changes.ret[numberOfKeys[i]].status === 'noncompliant') {
+            nonCompliantCount++;
+        }
+    }
+    
+    // for each key in changes count the number times the value of 'status' does not equal 'noncompliant' or 'compliant'
+    for (var i = 0; i < numberOfKeys.length; i++) {
+        if (typeof changes.ret[numberOfKeys[i]] === 'object') {
+            if (changes.ret[numberOfKeys[i]].status !== 'noncompliant' && changes.ret[numberOfKeys[i]].status !== 'compliant') {
+                notapplicableCount++;
+            }
+        }
+    }
+    
+    // show a percentage of compliant, noncompliant and not applicable over numberOfObjects
+    var compliantPercentage = (compliantCount / numberOfObjects) * 100;
+    var nonCompliantPercentage = (nonCompliantCount / numberOfObjects) * 100;
+    var notapplicablePercentage = (notapplicableCount / numberOfObjects) * 100;
+    
+    console.log(compliantPercentage);
+    console.log(nonCompliantPercentage);
+    console.log(notapplicablePercentage);
+    var total = compliantPercentage + nonCompliantPercentage + notapplicablePercentage;
+
+    context.setOutput("compliantPercentage", parseInt(compliantPercentage));
+    context.setOutput("nonCompliantPercentage", parseInt(nonCompliantPercentage));
+    context.setOutput("notapplicablePercentage", parseInt(notapplicablePercentage));
+    
+inputProperties:
+  - name: result
+    type: text
+    title: result
+    placeHolder: raw saltstack config data
+    bindable: true
+    labelInfo: true
+
+outputProperties:
+  - name: compliantPercentage
+    type: label
+    title: Compliant Percentage
+  - name: nonCompliantPercentage
+    type: label
+    title: Non Compliant Percentage
+  - name: notapplicablePercentage
+    type: label
+    title: Not Applicable Percentage
