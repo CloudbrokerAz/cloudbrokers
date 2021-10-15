@@ -1,0 +1,96 @@
+---
+project: Cloudbrokers
+kind: PIPELINE
+name: SaltStack SecOps
+icon: data:image/png;base64,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
+enabled: true
+concurrency: 10
+input:
+  minion: ''
+  platform: ''
+_inputMeta:
+  minion:
+    mandatory: true
+    description: ''
+  platform:
+    mandatory: true
+    description: ''
+output:
+  awsCompliantPercentage: ${SaltStack SecOps.AWS Check Compliance Results.output.properties.compliantPercentage}
+  awsOutputProperties: ${SaltStack SecOps.AWS Check Compliance Results.output.properties}
+  onpremCompliantPercentage: ${SaltStack SecOps.On-Prem Check Compliance Results.output.properties.compliantPercentage}
+  onpremOutputProperties: ${SaltStack SecOps.On-Prem Check Compliance Results.output.properties}
+workspace:
+  type: DOCKER
+  endpoint: Docker Host
+  image: node:10
+  registry: ''
+  path: ''
+  autoCloneForTrigger: false
+  limits:
+    memory: 1024
+    cpu: 1.0
+stageOrder:
+- SaltStack SecOps
+stages:
+  SaltStack SecOps:
+    taskOrder:
+    - On-Prem SSC Assess,AWS SSC Assess
+    - On-Prem Check Compliance Results,AWS Check Compliance Results
+    tasks:
+      AWS SSC Assess:
+        type: SSH
+        preCondition: ${input.platform} == "platform:aws"
+        endpoints:
+          agent: Cloud proxy
+        input:
+          script: 'sudo salt ''${input.minion}'' state.apply locke.policy_assess_u pillar=''{"policy_uuid":
+            "6c3567ba-cae7-41fd-92e1-bf4a54b84471", "policy_filename": "6c3567ba-cae7-41fd-92e1-bf4a54b84471_20211013025009369456"}''
+            saltenv=sse --out=json > $SCRIPT_RESPONSE_FILE'
+          username: admin
+          password: ''
+          passphrase: ''
+          privatekey: ${var.saltStackAws}
+          host: ${var.SaltStack AWS Master}
+          workingDirectory: ''
+          arguments: [
+            ]
+          environmentVariables: {
+            }
+          continueOnCommandFailure: false
+      AWS Check Compliance Results:
+        type: Custom
+        preCondition: ${input.platform} == "platform:aws"
+        input:
+          name: checkCompliance
+          version: '3.2'
+          properties:
+            result: ' ${SaltStack SecOps.AWS SSC Assess.output.response}'
+      On-Prem SSC Assess:
+        type: SSH
+        preCondition: ${input.platform} == "platform:vsphere"
+        endpoints:
+          agent: Cloud proxy
+        input:
+          script: 'salt ''${input.minion}'' state.apply locke.policy_assess_u pillar=''{"policy_uuid":
+            "82e52c82-7fbd-40aa-aa55-24cc0ea8fcce", "policy_filename": "82e52c82-7fbd-40aa-aa55-24cc0ea8fcce_20211010043656357671"}''
+            saltenv=sse --out=json > $SCRIPT_RESPONSE_FILE'
+          username: root
+          password: cmVMware1!
+          passphrase: ''
+          privatekey: ''
+          host: cmsydprdsse001.mgmt.cmlab.local
+          workingDirectory: ''
+          arguments: [
+            ]
+          environmentVariables: {
+            }
+          continueOnCommandFailure: false
+      On-Prem Check Compliance Results:
+        type: Custom
+        preCondition: ${input.platform} == "platform:vsphere"
+        input:
+          name: checkCompliance
+          version: '3.2'
+          properties:
+            result: ' ${SaltStack SecOps.On-Prem SSC Assess.output.response}'
