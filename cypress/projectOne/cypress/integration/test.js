@@ -36,4 +36,5 @@ it('Test Project One', () => {
   cy.get('#button-confirm').click();
   cy.wait(3000);
   cy.get('.pull-right > .btn').click();
+  
 })
