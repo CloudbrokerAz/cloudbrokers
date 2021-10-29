@@ -26,7 +26,6 @@ it('Test Project One', () => {
 
   cy.get('#button-guest').click();
   cy.wait(2000);
-  //cy.get('.panel-body > :nth-child(5) > .form-control').type('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer bibendum nisl at egestas luctus. Maecenas ex massa, venenatis non ullamcorper eget, feugiat at metus. Quisque mi magna, vehicula id aliquam efficitur, tempus et mauris. Suspendisse dapibus urna diam, eu placerat lectus pretium sit amet. Cras volutpat, felis vitae lacinia pretium, justo magna aliquam nisl, id egestas orci mi id nunc. Fusce in lacus pellentesque, consectetur dolor in, efficitur felis. Curabitur iaculis ultrices facilisis. Etiam facilisis lectus sed justo sollicitudin sollicitudin. Ut at maximus dolor, et dictum dolor. Proin dui ligula, mattis blandit lobortis condimentum, pharetra id sem. Pellentesque felis risus, euismod quis ex vel, gravida laoreet mi. Proin volutpat sem ut justo pretium, in lacinia elit euismod. Sed eu quam at sem consectetur tempor in sagittis diam. Morbi ultricies pretium dignissim. In egestas, dolor eget mattis commodo, eros ligula blandit dui, vel malesuada arcu metus quis orci. Morbi pretium massa ac iaculis consequat. Vivamus arcu eros, iaculis a tellus sit amet, volutpat dictum turpis. Aenean scelerisque ligula vel elit elementum, at tempus magna pellentesque. Etiam vestibulum tristique quam eget tempus.');
   cy.get('#button-shipping-method').click();
   cy.wait(2000);
   cy.get('.pull-right > [type="checkbox"]').click();
