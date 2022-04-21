@@ -1,0 +1,164 @@
+name: cloudAgnostic
+version: 1.0
+formatVersion: 1
+inputs:
+  platform:
+    type: string
+    oneOf:
+      - title: AWS
+        const: platform:aws
+      - title: Azure
+        const: platform:azure
+      - title: On-Prem
+        const: platform:vsphere
+    default: platform:aws
+  flavor:
+    type: string
+    oneOf:
+      - title: Tiny
+        const: tiny
+      - title: Small
+        const: small
+      - title: Medium
+        const: medium
+      - title: Oh well, It's not my Credit Card...
+        const: large
+    default: medium
+  image:
+    type: string
+    oneOf:
+      - title: Ubuntu 1804
+        const: ubuntu1804
+    default: ubuntu1804
+  workloadtype:
+    type: string
+    oneOf:
+      - title: Public
+        const: function:public
+      - title: Internal Web
+        const: function:web
+    default: function:public
+  applications:
+    type: string
+    oneOf:
+      - title: Opencart
+        const: moad
+      - title: Apache HTTPD
+        const: apache
+      - title: Tomcat Server
+        const: tomcat
+      - title: Nginx
+        const: nginx
+    default: moad
+resources:
+  Cloud_SecurityGroup_1:
+    type: Cloud.SecurityGroup
+    dependsOn:
+      - App_Network
+      - Db_Network
+    properties:
+      constraints:
+        - tag: project:multicloudmanagement
+      securityGroupType: existing
+  LoadBalancer:
+    type: Cloud.LoadBalancer
+    properties:
+      Region: region:sydney
+      Platform: ${input.platform}
+      constraints:
+        - tag: project:multicloudmanagement
+      os: linux
+      tags:
+        - key: project
+          value: cloudbrokers
+        - key: timeStamp
+          value: ${env.requestedAt}
+      routes:
+        - port: '80'
+          protocol: HTTP
+          instancePort: '80'
+          instanceProtocol: HTTP
+          healthCheckConfiguration:
+            port: '80'
+            urlPath: /index.php
+            protocol: HTTP
+            timeoutSeconds: 4
+            intervalSeconds: 5
+            healthyThreshold: 2
+            unhealthyThreshold: 5
+      network: ${resource.App_Network.id}
+      instances: ${resource.App[*].id}
+      internetFacing: true
+      name: ${env.deploymentName}
+  App:
+    type: Cloud.Machine
+    properties:
+      tags:
+        - key: timeStamp
+          value: ${env.requestedAt}
+      image: ${input.image}
+      flavor: ${input.flavor}
+      customizationSpec: test.cmlab.local_linux
+      cloudConfig: |
+        runcmd:
+          - hostnamectl set-hostname ${self.resourceName} --static
+          - curl -L https://bootstrap.saltstack.com -o install_salt.sh
+          - sudo sh install_salt.sh -i ${self.resourceName} -A ${input.platform == "platform:vsphere" ? propgroup.MultiCloudManagement_SaltStackConfig.onPremSaltStackMasterAddress : propgroup.MultiCloudManagement_SaltStackConfig.awsSaltStackMasterAddress}
+      remoteAccess:
+        authentication: publicPrivateKey
+        sshKey: ${secret.sshPublickKey}
+      constraints:
+        - tag: ${input.platform}
+        - tag: region:sydney
+      Infoblox.IPAM.createFixedAddress: true
+      networks:
+        - network: ${resource.App_Network.id}
+          assignment: '${input.platform == "platform:vsphere" ? "static" : "dynamic"}'
+      attachedDisks: []
+      count: 3
+  Database:
+    type: Cloud.Machine
+    dependsOn:
+      - App
+    properties:
+      image: ${input.image}
+      flavor: ${input.flavor}
+      customizationSpec: test.cmlab.local_linux
+      cloudConfig: |
+        runcmd:
+          - hostnamectl set-Nohostname ${self.resourceName} --static
+          - curl -L https://bootstrap.saltstack.com -o install_salt.sh
+          - sudo sh install_salt.sh -i ${self.resourceName} -A ${input.platform == "platform:vsphere" ? propgroup.MultiCloudManagement_SaltStackConfig.onPremSaltStackMasterAddress : propgroup.MultiCloudManagement_SaltStackConfig.awsSaltStackMasterAddress}
+          - "salt-call state.apply kickStart pillar='{app: moad, webMinion: ${resource.App[0].resourceName}}'"
+      remoteAccess:
+        authentication: publicPrivateKey
+        sshKey: ${secret.sshPublickKey}
+      constraints:
+        - tag: ${input.platform}
+        - tag: region:sydney
+      Infoblox.IPAM.createFixedAddress: true
+      networks:
+        - network: ${resource.Db_Network.id}
+          assignment: '${input.platform == "platform:vsphere" ? "static" : "dynamic"}'
+      attachedDisks: ${map_to_object(resource.Cloud_Volume_1[*].id, "source")}
+  Cloud_Volume_1:
+    type: Cloud.Volume
+    properties:
+      capacityGb: 2
+      count: 1
+  App_Network:
+    type: Cloud.Network
+    properties:
+      networkType: null
+      constraints:
+        - tag: ${input.platform}
+        - tag: ${input.workloadtype}
+        - tag: project:multicloudmanagement
+  Db_Network:
+    type: Cloud.Network
+    properties:
+      networkType: existing
+      constraints:
+        - tag: ${input.platform}
+        - tag: ${input.workloadtype}
+        - tag: project:multicloudmanagement
