@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 const { validationResult } = require('express-validator');
 const { raw } = require('body-parser');
 const validators = require('./friendsValidator');
-
+const { validateAuth } = require('./auth');
 
 AWS.config.update({
     region: process.env.AWS_DEFAULT_REGION,
@@ -44,7 +44,7 @@ router.get('/:id?', async (req, res) => {
     res.json(responseData)
 })
 
-router.post('/', validators.postFriendsValidators , async (req, res) => {
+router.post('/', [validateAuth, ...validators.postFriendsValidators] , async (req, res) => {
 
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
