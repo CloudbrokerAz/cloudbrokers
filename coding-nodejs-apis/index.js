@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const peopleRoutes = require('./routes/people');
+const friendsRoutes = require('./routes/friends');
 
 app.use(bodyParser.json());
 
@@ -10,7 +10,7 @@ app.get('/', async (req, res) => {
     res.send('Hello Andrew Richard...SON!!!!');
 })
 
-app.use('/people', peopleRoutes);
+app.use('/friends', friendsRoutes);
 
 const port = 3000;
 app.listen(port);

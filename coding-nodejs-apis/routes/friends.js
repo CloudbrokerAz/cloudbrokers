@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const AWS = require('aws-sdk');
-const { check, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 const { raw } = require('body-parser');
+const validators = require('./friendsValidator');
+
 
 AWS.config.update({
     region: process.env.AWS_DEFAULT_REGION,
@@ -42,28 +44,29 @@ router.get('/:id?', async (req, res) => {
     res.json(responseData)
 })
 
-router.post('/', [
-  check('rating').isNumeric()
-] , async (req, res) => {
+router.post('/', validators.postFriendsValidators , async (req, res) => {
 
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    res.status(400).json({ errors: errors.array() 
+    res.status(400).json({ 
+      errors: errors.array() 
     })
   }
+  else{
 
-  const params = {
-    TableName: 'nodejs-api',
-    Item: req.body
-  }
-
-  docClient.put(params, (error) => {
-    if (!error) {
-      res.status(201).send();
-    } else {
-      res.status(500).send("Unable to add record: " + error);
+    const params = {
+      TableName: 'nodejs-api',
+      Item: req.body
     }
-  })
+
+    docClient.put(params, (error) => {
+      if (!error) {
+        res.status(201).send();
+      } else {
+        res.status(500).send("Unable to add record: " + error);
+      }
+    })
+  }
 })
 
 
