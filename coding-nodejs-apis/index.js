@@ -4,6 +4,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const friendsRoutes = require('./routes/friends');
 
+//testing new branch
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
