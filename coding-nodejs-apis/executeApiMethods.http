@@ -1,0 +1,35 @@
+#HTTP API REQUESTS
+@url = http://localhost:3000
+GET {{url}}
+
+###
+GET {{url}}/friends?id=7
+
+###
+POST  {{url}}/friends
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "id": "7",
+    "firstName": "Theresa",
+    "lastName": "L",
+    "hair": "black",
+    "height": "tall",
+    "strong": true,
+    "rating": 10
+}
+
+###
+DELETE  {{url}}/friends?id=7
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+PATCH   {{url}}/friends?id=7
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "firstName": "Theresa223"
+}
