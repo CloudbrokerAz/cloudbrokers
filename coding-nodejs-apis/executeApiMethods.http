@@ -15,6 +15,7 @@ Authorization: Bearer {{token}}
     "firstName": "Theresa",
     "lastName": "L",
     "hair": "black",
+
     "height": "tall",
     "strong": true,
     "rating": 10
@@ -26,10 +27,9 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ###
-PATCH   {{url}}/friends?id=7
+PATCH   {{url}}/friends?id=6
 Content-Type: application/json
-Authorization: Bearer {{token}}
 
 {
-    "firstName": "Theresa223"
+    "firstName": "Bazzaaaaa"
 }

@@ -4,7 +4,8 @@ const AWS = require('aws-sdk');
 const { validationResult } = require('express-validator');
 const { raw } = require('body-parser');
 const validators = require('./friendsValidator');
-const { validateAuth } = require('./auth');
+const { validateAuth } = require('../auth');
+const { Route53Resolver } = require('aws-sdk');
 
 AWS.config.update({
     region: process.env.AWS_DEFAULT_REGION,
@@ -69,7 +70,75 @@ router.post('/', [validateAuth, ...validators.postFriendsValidators] , async (re
   }
 })
 
+router.delete('/:id?', async (req, res) => {
 
+  const params = {
+    TableName: 'nodejs-api'
+  }
+
+  let responseData;
+  if (req.params.id) {
+      params.Key = {
+          id: req.params.id
+      }
+  }
+  else {
+    if(req.query.id){
+      params.Key = {
+          id: req.query.id
+      }
+    }
+  }
+
+  if (!params.Key) {
+      res.send("ID is required");
+  }
+  else {
+      responseData = await docClient.delete(params).promise();
+      res.status(200).send("Record deleted");
+  }
+  
+})
+
+router.patch('/:id?', async (req, res) => {
+  console.log(req.body.firstName)
+
+  const params = {
+    TableName: 'nodejs-api',
+    ExpressionAttributeValues: {
+      ':f': req.body.firstName
+    },
+    UpdateExpression: 'set firstName = :f'
+  }
+
+  let responseData;
+  if (req.params.id) {
+      params.Key = {
+          id: req.params.id
+      }
+  }
+  else {
+    if(req.query.id){
+      params.Key = {
+          id: req.query.id
+      }
+    }
+  }
+
+  if (!params.Key) {
+    res.send("ID is required");
+  }
+  else {
+      responseData = await docClient.update(params, function(error, data) {
+          if (error) {
+              res.status(500).send("Unable to update record: " + error);
+          } else {
+              res.status(200).send("Record updated");
+          }
+      });
+      console.log(responseData);
+  }
+})
 
 
 module.exports = router;
