@@ -1,0 +1,6 @@
+.terraform
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+coding-nodejs-apis/node_modules
+coding-nodejs-apis/.env
